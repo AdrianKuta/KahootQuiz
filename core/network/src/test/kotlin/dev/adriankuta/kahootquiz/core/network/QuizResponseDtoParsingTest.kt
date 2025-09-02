@@ -2,7 +2,7 @@ package dev.adriankuta.kahootquiz.core.network
 
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
-import dev.adriankuta.kahootquiz.core.network.model.QuizResponseDto
+import dev.adriankuta.kahootquiz.core.network.models.QuizResponseDto
 import org.junit.Test
 import java.io.InputStreamReader
 

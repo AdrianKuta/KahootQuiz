@@ -1,4 +1,4 @@
-package dev.adriankuta.kahootquiz.core.network.model
+package dev.adriankuta.kahootquiz.core.network.models
 
 // This file used to contain all DTOs in one place.
 // The DTOs have been split into separate files for maintainability:

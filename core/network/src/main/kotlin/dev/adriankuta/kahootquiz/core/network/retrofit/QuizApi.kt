@@ -1,6 +1,6 @@
 package dev.adriankuta.kahootquiz.core.network.retrofit
 
-import dev.adriankuta.kahootquiz.core.network.model.QuizResponseDto
+import dev.adriankuta.kahootquiz.core.network.models.QuizResponseDto
 import retrofit2.http.GET
 
 interface QuizApi {

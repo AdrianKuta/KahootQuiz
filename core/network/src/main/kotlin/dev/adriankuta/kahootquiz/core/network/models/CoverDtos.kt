@@ -1,4 +1,4 @@
-package dev.adriankuta.kahootquiz.core.network.model
+package dev.adriankuta.kahootquiz.core.network.models
 
 // Cover metadata and related DTOs
 

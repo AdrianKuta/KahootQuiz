@@ -28,6 +28,7 @@ android {
 
 dependencies {
     implementation(projects.ui.quiz)
+    implementation(projects.domain)
 
     implementation(projects.model.data)
 
