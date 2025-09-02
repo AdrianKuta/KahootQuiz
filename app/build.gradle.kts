@@ -27,8 +27,10 @@ android {
 }
 
 dependencies {
+    implementation(projects.ui.quiz)
+
+    implementation(projects.model.data)
+
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.app.update.ktx)
 }

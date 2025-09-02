@@ -1,4 +1,5 @@
 [versions]
+retrofit = "3.0.0"
 targetSdk = "36"
 compileSdk = "36"
 minSdk = "23"
@@ -115,6 +116,8 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "reviewKtx" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }

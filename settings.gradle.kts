@@ -25,3 +25,7 @@ rootProject.name = "KahootQuiz"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
+include(":core:network")
+include(":domain")
+include(":model:data")
+include(":ui:quiz")
