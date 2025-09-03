@@ -9,7 +9,11 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.designsystem)
     implementation(projects.domain)
+
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.timber)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }

@@ -27,10 +27,10 @@ android {
 }
 
 dependencies {
-    implementation(projects.ui.quiz)
+    implementation(projects.core.designsystem)
     implementation(projects.domain)
-
     implementation(projects.model.data)
+    implementation(projects.ui.quiz)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.hilt.navigation.compose)
