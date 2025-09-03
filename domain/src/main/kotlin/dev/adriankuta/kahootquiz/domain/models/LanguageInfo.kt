@@ -5,5 +5,5 @@ package dev.adriankuta.kahootquiz.domain.models
 data class LanguageInfo(
     val language: String?,
     val lastUpdatedOn: Long?,
-    val readAloudSupported: Boolean?
+    val readAloudSupported: Boolean?,
 )

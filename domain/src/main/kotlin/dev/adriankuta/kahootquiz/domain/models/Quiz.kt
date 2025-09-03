@@ -31,5 +31,5 @@ data class Quiz(
     val hasRestrictedContent: Boolean?,
     val type: String?,
     val created: Long?,
-    val modified: Long?
+    val modified: Long?,
 )

@@ -4,5 +4,5 @@ package dev.adriankuta.kahootquiz.domain.models
 
 data class ExtractedColor(
     val swatch: String?,
-    val rgbHex: String?
+    val rgbHex: String?,
 )

@@ -12,5 +12,5 @@ data class ImageMetadata(
     val width: Int? = null,
     val height: Int? = null,
     val effects: List<String>? = null,
-    val crop: Crop? = null
+    val crop: Crop? = null,
 )

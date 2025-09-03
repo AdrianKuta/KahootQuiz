@@ -17,7 +17,7 @@ data class QuestionDto(
     val questionFormat: Int?,
     val languageInfo: LanguageInfoDto?,
     val media: List<MediaItemDto>?,
-    val choiceRange: ChoiceRangeDto?
+    val choiceRange: ChoiceRangeDto?,
 )
 
 // Choice option
@@ -25,7 +25,7 @@ data class QuestionDto(
 data class ChoiceDto(
     val answer: String?,
     val correct: Boolean,
-    val languageInfo: LanguageInfoDto?
+    val languageInfo: LanguageInfoDto?,
 )
 
 // Optional video attachment
@@ -35,7 +35,7 @@ data class VideoDto(
     val startTime: Int?,
     val endTime: Int?,
     val service: String?,
-    val fullUrl: String?
+    val fullUrl: String?,
 )
 
 // Image metadata appearing in multiple places
@@ -50,7 +50,7 @@ data class ImageMetadataDto(
     val width: Int? = null,
     val height: Int? = null,
     val effects: List<String>? = null,
-    val crop: CropDto? = null
+    val crop: CropDto? = null,
 )
 
 // Generic media item on question
@@ -67,7 +67,7 @@ data class MediaItemDto(
     val resources: String? = null,
     val width: Int? = null,
     val height: Int? = null,
-    val crop: CropDto? = null
+    val crop: CropDto? = null,
 )
 
 // Slider range for "slider" question type
@@ -77,5 +77,5 @@ data class ChoiceRangeDto(
     val end: Int?,
     val step: Int?,
     val correct: Int?,
-    val tolerance: Int?
+    val tolerance: Int?,
 )

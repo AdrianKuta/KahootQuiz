@@ -13,14 +13,14 @@ data class CoverMetadataDto(
     val height: Int?,
     val extractedColors: List<ExtractedColorDto>?,
     val blurhash: String?,
-    val crop: CropDto?
+    val crop: CropDto?,
 )
 
 // Color extracted from cover image
 
 data class ExtractedColorDto(
     val swatch: String?,
-    val rgbHex: String?
+    val rgbHex: String?,
 )
 
 // Crop descriptor
@@ -28,5 +28,5 @@ data class ExtractedColorDto(
 data class CropDto(
     val origin: PointDto?,
     val target: PointDto?,
-    val circular: Boolean?
+    val circular: Boolean?,
 )

@@ -7,5 +7,5 @@ data class Metadata(
     val duplicationProtection: Boolean?,
     val featuredListMemberships: List<FeaturedListMembership>?,
     val lastEdit: LastEdit?,
-    val versionMetadata: VersionMetadata?
+    val versionMetadata: VersionMetadata?,
 )

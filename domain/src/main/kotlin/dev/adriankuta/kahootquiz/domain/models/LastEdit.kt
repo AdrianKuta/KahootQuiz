@@ -5,5 +5,5 @@ package dev.adriankuta.kahootquiz.domain.models
 data class LastEdit(
     val editorUserId: String?,
     val editorUsername: String?,
-    val editTimestamp: Long?
+    val editTimestamp: Long?,
 )

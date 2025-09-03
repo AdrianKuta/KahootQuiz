@@ -16,7 +16,7 @@ fun KahootQuizNavGraph(
     NavHost(
         navController = navController,
         startDestination = QuizRoute,
-        modifier = modifier
+        modifier = modifier,
     ) {
         quizScreen()
     }

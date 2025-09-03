@@ -5,7 +5,7 @@ package dev.adriankuta.kahootquiz.core.network.models
 data class LanguageInfoDto(
     val language: String?,
     val lastUpdatedOn: Long?,
-    val readAloudSupported: Boolean?
+    val readAloudSupported: Boolean?,
 )
 
 // Minimal channel info
@@ -16,5 +16,5 @@ data class ChannelDto(val id: String?)
 
 data class PointDto(
     val x: Int?,
-    val y: Int?
+    val y: Int?,
 )

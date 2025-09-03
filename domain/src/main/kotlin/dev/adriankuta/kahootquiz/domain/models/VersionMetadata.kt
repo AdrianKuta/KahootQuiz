@@ -5,5 +5,5 @@ package dev.adriankuta.kahootquiz.domain.models
 data class VersionMetadata(
     val version: Int?,
     val created: Long?,
-    val creator: String?
+    val creator: String?,
 )

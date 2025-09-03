@@ -5,5 +5,5 @@ package dev.adriankuta.kahootquiz.domain.models
 data class Crop(
     val origin: Point?,
     val target: Point?,
-    val circular: Boolean?
+    val circular: Boolean?,
 )

@@ -13,5 +13,5 @@ data class CoverMetadata(
     val height: Int?,
     val extractedColors: List<ExtractedColor>?,
     val blurhash: String?,
-    val crop: Crop?
+    val crop: Crop?,
 )

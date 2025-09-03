@@ -7,5 +7,5 @@ data class ChoiceRange(
     val end: Int?,
     val step: Int?,
     val correct: Int?,
-    val tolerance: Int?
+    val tolerance: Int?,
 )

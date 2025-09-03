@@ -15,6 +15,6 @@ internal abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsQuizRepository(
-        quizRepositoryImpl: QuizRepositoryImpl
+        quizRepositoryImpl: QuizRepositoryImpl,
     ): QuizRepository
 }

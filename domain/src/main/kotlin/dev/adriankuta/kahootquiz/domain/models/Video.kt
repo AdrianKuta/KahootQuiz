@@ -5,5 +5,5 @@ data class Video(
     val startTime: Int?,
     val endTime: Int?,
     val service: String?,
-    val fullUrl: String?
+    val fullUrl: String?,
 )

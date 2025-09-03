@@ -4,5 +4,5 @@ package dev.adriankuta.kahootquiz.domain.models
 
 data class FeaturedListMembership(
     val list: String?,
-    val addedAt: Long?
+    val addedAt: Long?,
 )

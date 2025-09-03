@@ -5,7 +5,7 @@ import dev.adriankuta.kahootquiz.domain.repositories.QuizRepository
 import javax.inject.Inject
 
 class GetQuizUseCase @Inject constructor(
-    private val quizRepository: QuizRepository
+    private val quizRepository: QuizRepository,
 ) {
 
     suspend operator fun invoke(): Quiz {

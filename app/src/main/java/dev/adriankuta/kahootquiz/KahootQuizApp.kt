@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun KahootQuizApp(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,

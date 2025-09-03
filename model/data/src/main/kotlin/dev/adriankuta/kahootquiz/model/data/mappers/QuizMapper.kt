@@ -1,7 +1,44 @@
 package dev.adriankuta.kahootquiz.model.data.mappers
 
-import dev.adriankuta.kahootquiz.core.network.models.*
-import dev.adriankuta.kahootquiz.domain.models.*
+import dev.adriankuta.kahootquiz.core.network.models.AccessDto
+import dev.adriankuta.kahootquiz.core.network.models.ChannelDto
+import dev.adriankuta.kahootquiz.core.network.models.ChoiceDto
+import dev.adriankuta.kahootquiz.core.network.models.ChoiceRangeDto
+import dev.adriankuta.kahootquiz.core.network.models.ContentTagsDto
+import dev.adriankuta.kahootquiz.core.network.models.CoverMetadataDto
+import dev.adriankuta.kahootquiz.core.network.models.CropDto
+import dev.adriankuta.kahootquiz.core.network.models.ExtractedColorDto
+import dev.adriankuta.kahootquiz.core.network.models.FeaturedListMembershipDto
+import dev.adriankuta.kahootquiz.core.network.models.ImageMetadataDto
+import dev.adriankuta.kahootquiz.core.network.models.LanguageInfoDto
+import dev.adriankuta.kahootquiz.core.network.models.LastEditDto
+import dev.adriankuta.kahootquiz.core.network.models.MediaItemDto
+import dev.adriankuta.kahootquiz.core.network.models.MetadataDto
+import dev.adriankuta.kahootquiz.core.network.models.PointDto
+import dev.adriankuta.kahootquiz.core.network.models.QuestionDto
+import dev.adriankuta.kahootquiz.core.network.models.QuizResponseDto
+import dev.adriankuta.kahootquiz.core.network.models.VersionMetadataDto
+import dev.adriankuta.kahootquiz.core.network.models.VideoDto
+import dev.adriankuta.kahootquiz.domain.models.Access
+import dev.adriankuta.kahootquiz.domain.models.Channel
+import dev.adriankuta.kahootquiz.domain.models.Choice
+import dev.adriankuta.kahootquiz.domain.models.ChoiceRange
+import dev.adriankuta.kahootquiz.domain.models.ContentTags
+import dev.adriankuta.kahootquiz.domain.models.CoverMetadata
+import dev.adriankuta.kahootquiz.domain.models.Crop
+import dev.adriankuta.kahootquiz.domain.models.ExtractedColor
+import dev.adriankuta.kahootquiz.domain.models.FeaturedListMembership
+import dev.adriankuta.kahootquiz.domain.models.ImageMetadata
+import dev.adriankuta.kahootquiz.domain.models.LanguageInfo
+import dev.adriankuta.kahootquiz.domain.models.LastEdit
+import dev.adriankuta.kahootquiz.domain.models.MediaItem
+import dev.adriankuta.kahootquiz.domain.models.Metadata
+import dev.adriankuta.kahootquiz.domain.models.Point
+import dev.adriankuta.kahootquiz.domain.models.Question
+import dev.adriankuta.kahootquiz.domain.models.Quiz
+import dev.adriankuta.kahootquiz.domain.models.QuizId
+import dev.adriankuta.kahootquiz.domain.models.VersionMetadata
+import dev.adriankuta.kahootquiz.domain.models.Video
 import kotlin.time.Duration.Companion.milliseconds
 
 internal fun QuizResponseDto.toDomainModel(): Quiz =
@@ -34,7 +71,7 @@ internal fun QuizResponseDto.toDomainModel(): Quiz =
         hasRestrictedContent = hasRestrictedContent,
         type = type,
         created = created,
-        modified = modified
+        modified = modified,
     )
 
 private fun CoverMetadataDto.toDomain(): CoverMetadata = CoverMetadata(
@@ -48,25 +85,25 @@ private fun CoverMetadataDto.toDomain(): CoverMetadata = CoverMetadata(
     height = height,
     extractedColors = extractedColors?.map { it.toDomain() },
     blurhash = blurhash,
-    crop = crop?.toDomain()
+    crop = crop?.toDomain(),
 )
 
 private fun ExtractedColorDto.toDomain(): ExtractedColor = ExtractedColor(
     swatch = swatch,
-    rgbHex = rgbHex
+    rgbHex = rgbHex,
 )
 
 private fun CropDto.toDomain(): Crop = Crop(
     origin = origin?.toDomain(),
     target = target?.toDomain(),
-    circular = circular
+    circular = circular,
 )
 
 private fun PointDto.toDomain(): Point = Point(x = x, y = y)
 
 private fun ContentTagsDto.toDomain(): ContentTags = ContentTags(
     curriculumCodes = curriculumCodes,
-    generatedCurriculumCodes = generatedCurriculumCodes
+    generatedCurriculumCodes = generatedCurriculumCodes,
 )
 
 private fun MetadataDto.toDomain(): Metadata = Metadata(
@@ -74,36 +111,36 @@ private fun MetadataDto.toDomain(): Metadata = Metadata(
     duplicationProtection = duplicationProtection,
     featuredListMemberships = featuredListMemberships?.map { it.toDomain() },
     lastEdit = lastEdit?.toDomain(),
-    versionMetadata = versionMetadata?.toDomain()
+    versionMetadata = versionMetadata?.toDomain(),
 )
 
 private fun AccessDto.toDomain(): Access = Access(
     groupRead = groupRead,
     folderGroupIds = folderGroupIds,
-    features = features
+    features = features,
 )
 
 private fun FeaturedListMembershipDto.toDomain(): FeaturedListMembership = FeaturedListMembership(
     list = list,
-    addedAt = addedAt
+    addedAt = addedAt,
 )
 
 private fun LastEditDto.toDomain(): LastEdit = LastEdit(
     editorUserId = editorUserId,
     editorUsername = editorUsername,
-    editTimestamp = editTimestamp
+    editTimestamp = editTimestamp,
 )
 
 private fun VersionMetadataDto.toDomain(): VersionMetadata = VersionMetadata(
     version = version,
     created = created,
-    creator = creator
+    creator = creator,
 )
 
 private fun LanguageInfoDto.toDomain(): LanguageInfo = LanguageInfo(
     language = language,
     lastUpdatedOn = lastUpdatedOn,
-    readAloudSupported = readAloudSupported
+    readAloudSupported = readAloudSupported,
 )
 
 private fun ChannelDto.toDomain(): Channel = Channel(id = id)
@@ -123,13 +160,13 @@ private fun QuestionDto.toDomain(): Question = Question(
     questionFormat = questionFormat,
     languageInfo = languageInfo?.toDomain(),
     media = media?.map { it.toDomain() },
-    choiceRange = choiceRange?.toDomain()
+    choiceRange = choiceRange?.toDomain(),
 )
 
 private fun ChoiceDto.toDomain(): Choice = Choice(
     answer = answer,
     correct = correct,
-    languageInfo = languageInfo?.toDomain()
+    languageInfo = languageInfo?.toDomain(),
 )
 
 private fun VideoDto.toDomain(): Video = Video(
@@ -137,7 +174,7 @@ private fun VideoDto.toDomain(): Video = Video(
     startTime = startTime,
     endTime = endTime,
     service = service,
-    fullUrl = fullUrl
+    fullUrl = fullUrl,
 )
 
 private fun ImageMetadataDto.toDomain(): ImageMetadata = ImageMetadata(
@@ -150,7 +187,7 @@ private fun ImageMetadataDto.toDomain(): ImageMetadata = ImageMetadata(
     width = width,
     height = height,
     effects = effects,
-    crop = crop?.toDomain()
+    crop = crop?.toDomain(),
 )
 
 private fun MediaItemDto.toDomain(): MediaItem = MediaItem(
@@ -165,7 +202,7 @@ private fun MediaItemDto.toDomain(): MediaItem = MediaItem(
     resources = resources,
     width = width,
     height = height,
-    crop = crop?.toDomain()
+    crop = crop?.toDomain(),
 )
 
 private fun ChoiceRangeDto.toDomain(): ChoiceRange = ChoiceRange(
@@ -173,5 +210,5 @@ private fun ChoiceRangeDto.toDomain(): ChoiceRange = ChoiceRange(
     end = end,
     step = step,
     correct = correct,
-    tolerance = tolerance
+    tolerance = tolerance,
 )

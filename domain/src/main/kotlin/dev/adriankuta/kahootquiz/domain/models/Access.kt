@@ -5,5 +5,5 @@ package dev.adriankuta.kahootquiz.domain.models
 data class Access(
     val groupRead: List<String>?,
     val folderGroupIds: List<String>?,
-    val features: List<String>?
+    val features: List<String>?,
 )

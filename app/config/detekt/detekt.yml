@@ -8,18 +8,18 @@ naming:
 
 complexity:
   LongParameterList:
-    ignoreAnnotated: ['Composable']
+    ignoreAnnotated: [ 'Composable' ]
   TooManyFunctions:
-    ignoreAnnotatedFunctions: ['Preview']
+    ignoreAnnotatedFunctions: [ 'Preview' ]
 
 style:
   MagicNumber:
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
-    ignoreAnnotated: ['Composable']
+    ignoreAnnotated: [ 'Composable' ]
 
   UnusedPrivateMember:
-    ignoreAnnotated: ['Composable']
+    ignoreAnnotated: [ 'Composable' ]
 
 # Deviations from defaults
 formatting:

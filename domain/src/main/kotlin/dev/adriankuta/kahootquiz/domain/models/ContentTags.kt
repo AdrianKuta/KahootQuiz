@@ -4,5 +4,5 @@ package dev.adriankuta.kahootquiz.domain.models
 
 data class ContentTags(
     val curriculumCodes: List<String>?,
-    val generatedCurriculumCodes: List<String>?
+    val generatedCurriculumCodes: List<String>?,
 )

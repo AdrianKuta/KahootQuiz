@@ -14,5 +14,5 @@ data class MediaItem(
     val resources: String? = null,
     val width: Int? = null,
     val height: Int? = null,
-    val crop: Crop? = null
+    val crop: Crop? = null,
 )
