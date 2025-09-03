@@ -1,5 +1,35 @@
 package dev.adriankuta.kahootquiz.domain.models
 
+// Domain model representing a Quiz and its nested data
+
 data class Quiz(
-    val id: String
+    val id: QuizId,
+    val language: String?,
+    val creator: String?,
+    val creatorUsername: String?,
+    val compatibilityLevel: Int?,
+    val creatorPrimaryUsage: String?,
+    val folderId: String?,
+    val themeId: String?,
+    val visibility: Int?,
+    val audience: String?,
+    val title: String?,
+    val description: String?,
+    val quizType: String?,
+    val cover: String?,
+    val coverMetadata: CoverMetadata?,
+    val questions: List<Question>,
+    val contentTags: ContentTags?,
+    val metadata: Metadata?,
+    val resources: String?,
+    val slug: String?,
+    val languageInfo: LanguageInfo?,
+    val inventoryItemIds: List<String>,
+    val channels: List<Channel>,
+    val isValid: Boolean?,
+    val playAsGuest: Boolean?,
+    val hasRestrictedContent: Boolean?,
+    val type: String?,
+    val created: Long?,
+    val modified: Long?
 )

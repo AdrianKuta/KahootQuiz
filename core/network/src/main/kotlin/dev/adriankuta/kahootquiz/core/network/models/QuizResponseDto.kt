@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 // Root response for a Kahoot quiz details (network layer DTO)
 data class QuizResponseDto(
-    val uuid: String?,
+    val uuid: String,
     val language: String?,
     val creator: String?,
     @SerializedName("creator_username") val creatorUsername: String?,

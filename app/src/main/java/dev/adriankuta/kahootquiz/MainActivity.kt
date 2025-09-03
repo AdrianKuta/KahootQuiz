@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     var quizId by remember { mutableStateOf<String?>(null) }
 
                     LaunchedEffect(Unit) {
-                        quizId = getQuizUseCase().id
+                        quizId = getQuizUseCase().id.value
                     }
 
                     Greeting(
