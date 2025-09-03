@@ -2,6 +2,7 @@ package dev.adriankuta.kahootquiz.model.data.mappers
 
 import dev.adriankuta.kahootquiz.core.network.models.*
 import dev.adriankuta.kahootquiz.domain.models.*
+import kotlin.time.Duration.Companion.milliseconds
 
 internal fun QuizResponseDto.toDomainModel(): Quiz =
     Quiz(
@@ -110,7 +111,7 @@ private fun ChannelDto.toDomain(): Channel = Channel(id = id)
 private fun QuestionDto.toDomain(): Question = Question(
     type = type,
     question = question,
-    time = time,
+    time = time?.milliseconds,
     points = points,
     pointsMultiplier = pointsMultiplier,
     choices = choices?.map { it.toDomain() },
