@@ -12,12 +12,12 @@ data class Question(
     val pointsMultiplier: Int?,
     val choices: List<Choice>?,
     val layout: String? = null,
-    val image: String,
+    val image: String? = null,
     val imageMetadata: ImageMetadata?,
     val resources: String? = null,
     val video: Video? = null,
     val questionFormat: Int? = null,
     val languageInfo: LanguageInfo? = null,
     val media: List<MediaItem>? = null,
-    val choiceRange: ChoiceRange? = null
+    val choiceRange: ChoiceRange? = null,
 )

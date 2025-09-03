@@ -1,7 +1,4 @@
 [versions]
-coilCompose = "3.3.0"
-coilNetworkOkhttp = "3.3.0"
-retrofit = "3.0.0"
 targetSdk = "36"
 compileSdk = "36"
 minSdk = "23"
@@ -23,6 +20,8 @@ animation = "1.9.0"
 appUpdateKtx = "2.1.0"
 appcompat = "1.7.1"
 billing = "8.0.0"
+coilCompose = "3.3.0"
+coilNetworkOkhttp = "3.3.0"
 coreTest = "1.7.0" # https://developer.android.com/jetpack/androidx/releases/test
 datastorePreferences = "1.1.7" # https://developer.android.com/topic/libraries/architecture/datastore#preferences-datastore-dependencies
 datetime = "0.7.1" # https://github.com/Kotlin/kotlinx-datetime/releases
@@ -48,6 +47,7 @@ material = "1.12.0"
 materialIconsExtended = "1.7.8"
 mockk = "1.14.5" # https://github.com/mockk/mockk/releases
 playServicesAds = "24.5.0"
+retrofit = "3.0.0"
 reviewKtx = "2.0.2"
 room = "2.7.2"
 secrets = "2.0.1"

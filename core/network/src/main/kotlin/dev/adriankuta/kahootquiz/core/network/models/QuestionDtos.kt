@@ -24,7 +24,7 @@ data class QuestionDto(
 
 data class ChoiceDto(
     val answer: String?,
-    val correct: Boolean?,
+    val correct: Boolean,
     val languageInfo: LanguageInfoDto?
 )
 
