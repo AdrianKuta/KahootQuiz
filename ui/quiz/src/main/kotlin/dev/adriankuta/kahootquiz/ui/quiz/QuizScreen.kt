@@ -1,5 +1,7 @@
 package dev.adriankuta.kahootquiz.ui.quiz
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -25,5 +27,7 @@ private fun QuizScreen(
     uiState: QuizUiState,
     modifier: Modifier = Modifier,
 ) {
-
+    Column(modifier) {
+        Text(uiState.quiz?.id?.value ?: "")
+    }
 }
