@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -79,6 +78,7 @@ private fun QuizScreenLoading(
 }
 
 @Composable
+@Suppress("LongMethod")
 private fun QuizScreenSuccess(
     uiState: ScreenUiState.Success,
     onSelect: (Int) -> Unit,
@@ -90,7 +90,7 @@ private fun QuizScreenSuccess(
             .fillMaxWidth(),
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .height(72.dp),
         ) {
             Toolbar(
@@ -114,7 +114,6 @@ private fun QuizScreenSuccess(
                 .fillMaxHeight(0.5f),
         )
         Spacer(Modifier.height(8.dp))
-
 
         Choices(
             choices = uiState.currentQuestion.choices,
@@ -150,19 +149,7 @@ private fun QuizScreenSuccess(
                     )
                 }
             }
-
         }
-    }
-}
-
-
-private fun LazyListScope.timer(uiState: ScreenUiState.Success) {
-    item(key = "timer_${uiState.currentQuestionIndex}") {
-        TimerBar(
-            totalSeconds = uiState.timerState.totalTimeSeconds,
-            remainingSeconds = uiState.timerState.remainingTimeSeconds,
-            modifier = Modifier.padding(8.dp),
-        )
     }
 }
 
