@@ -6,13 +6,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.adriankuta.kahootquiz.domain.models.Question
 import dev.adriankuta.kahootquiz.domain.models.Quiz
 import dev.adriankuta.kahootquiz.domain.usecases.GetQuizUseCase
+import dev.adriankuta.kahootquiz.ui.quiz.utils.Result
+import dev.adriankuta.kahootquiz.ui.quiz.utils.asResult
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,6 +30,14 @@ class QuizScreenViewModel @Inject constructor(
     private val quiz: StateFlow<QuizUiState> = flow {
         emit(QuizUiState.Success(getQuizUseCase()))
     }
+        .asResult()
+        .map { quizResult ->
+            when (quizResult) {
+                is Result.Error -> QuizUiState.Loading // Todo error handling not implemented on UI
+                Result.Loading -> QuizUiState.Loading
+                is Result.Success -> quizResult.data
+            }
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -52,34 +64,12 @@ class QuizScreenViewModel @Inject constructor(
         }
     }
 
-    val uiState: StateFlow<ScreenUiState> = combine(
-        quiz,
-        _selectedChoiceIndex,
-        _remainingTimeSeconds,
-        _currentQuestionIndex,
-    ) { quizState, selectedChoiceIndex, remainingTimeSeconds, currentQuestionIndex ->
-        when (quizState) {
-            QuizUiState.Loading -> ScreenUiState.Loading
-            is QuizUiState.Success -> {
-                val currentQuestion = quizState.quiz.questions.getOrNull(currentQuestionIndex)
-                val isAnswerCorrect = selectedChoiceIndex?.let { idx ->
-                    currentQuestion?.choices?.getOrNull(idx)?.correct == true
-                }
-
-                ScreenUiState.Success(
-                    currentQuestion = currentQuestion,
-                    selectedChoiceIndex = selectedChoiceIndex,
-                    currentQuestionIndex = currentQuestionIndex,
-                    totalQuestions = quizState.quiz.questions.size,
-                    timerState = TimerState(
-                        remainingTimeSeconds = remainingTimeSeconds,
-                        totalTimeSeconds = currentQuestion?.time?.inWholeSeconds?.toInt() ?: 0,
-                    ),
-                    isAnswerCorrect = isAnswerCorrect,
-                )
-            }
-        }
-    }
+    val uiState: StateFlow<ScreenUiState> = screenUiState(
+        quizFlow = quiz,
+        selectedChoiceIndexFlow = _selectedChoiceIndex,
+        remainingTimeSecondsFlow = _remainingTimeSeconds,
+        currentQuestionIndexFlow = _currentQuestionIndex,
+    )
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -133,6 +123,40 @@ class QuizScreenViewModel @Inject constructor(
                 _selectedChoiceIndex.value = -1
             }
             timerJob = null
+        }
+    }
+}
+
+private fun screenUiState(
+    quizFlow: StateFlow<QuizUiState>,
+    selectedChoiceIndexFlow: Flow<Int?>,
+    remainingTimeSecondsFlow: Flow<Int>,
+    currentQuestionIndexFlow: Flow<Int>,
+): Flow<ScreenUiState> = combine(
+    quizFlow,
+    selectedChoiceIndexFlow,
+    remainingTimeSecondsFlow,
+    currentQuestionIndexFlow,
+) { quizState, selectedChoiceIndex, remainingTimeSeconds, currentQuestionIndex ->
+    when (quizState) {
+        QuizUiState.Loading -> ScreenUiState.Loading
+        is QuizUiState.Success -> {
+            val currentQuestion = quizState.quiz.questions.getOrNull(currentQuestionIndex)
+            val isAnswerCorrect = selectedChoiceIndex?.let { idx ->
+                currentQuestion?.choices?.getOrNull(idx)?.correct == true
+            }
+
+            ScreenUiState.Success(
+                currentQuestion = currentQuestion,
+                selectedChoiceIndex = selectedChoiceIndex,
+                currentQuestionIndex = currentQuestionIndex,
+                totalQuestions = quizState.quiz.questions.size,
+                timerState = TimerState(
+                    remainingTimeSeconds = remainingTimeSeconds,
+                    totalTimeSeconds = currentQuestion?.time?.inWholeSeconds?.toInt() ?: 0,
+                ),
+                isAnswerCorrect = isAnswerCorrect,
+            )
         }
     }
 }
