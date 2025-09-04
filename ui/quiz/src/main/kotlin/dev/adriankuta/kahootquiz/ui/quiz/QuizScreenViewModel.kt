@@ -61,6 +61,9 @@ class QuizScreenViewModel @Inject constructor(
             QuizUiState.Loading -> ScreenUiState.Loading
             is QuizUiState.Success -> {
                 val currentQuestion = quizState.quiz.questions.getOrNull(currentQuestionIndex)
+                val isAnswerCorrect = selectedChoiceIndex?.let { idx ->
+                    currentQuestion?.choices?.getOrNull(idx)?.correct == true
+                }
 
                 ScreenUiState.Success(
                     currentQuestion = currentQuestion,
@@ -71,6 +74,7 @@ class QuizScreenViewModel @Inject constructor(
                         remainingTimeSeconds = remainingTimeSeconds,
                         totalTimeSeconds = currentQuestion?.time?.inWholeSeconds?.toInt() ?: 0,
                     ),
+                    isAnswerCorrect = isAnswerCorrect,
                 )
             }
         }
@@ -148,6 +152,7 @@ sealed interface ScreenUiState {
         val currentQuestionIndex: Int = 0,
         val totalQuestions: Int = 0,
         val timerState: TimerState = TimerState(),
+        val isAnswerCorrect: Boolean? = null,
     ) : ScreenUiState
 }
 

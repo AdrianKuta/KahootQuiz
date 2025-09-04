@@ -32,6 +32,7 @@ import dev.adriankuta.kahootquiz.core.designsystem.KahootQuizTheme
 import dev.adriankuta.kahootquiz.domain.models.Choice
 import dev.adriankuta.kahootquiz.domain.models.Question
 import dev.adriankuta.kahootquiz.ui.quiz.components.Choices
+import dev.adriankuta.kahootquiz.ui.quiz.components.AnswerFeedbackBanner
 import dev.adriankuta.kahootquiz.ui.quiz.components.QuestionContent
 import dev.adriankuta.kahootquiz.ui.quiz.components.TimerBar
 import dev.adriankuta.kahootquiz.ui.quiz.components.Toolbar
@@ -115,16 +116,26 @@ private fun QuizScreenSuccess(
 
 private fun LazyListScope.toolbar(
     uiState: ScreenUiState.Success,
+    modifier: Modifier = Modifier,
 ) {
     item(key = "toolbar") {
-        Toolbar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(72.dp)
-                .padding(8.dp),
-            currentQuestionIndex = uiState.currentQuestionIndex,
-            totalQuestions = uiState.totalQuestions,
-        )
+        Box(
+            modifier = modifier
+                .height(72.dp),
+        ) {
+            Toolbar(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                currentQuestionIndex = uiState.currentQuestionIndex,
+                totalQuestions = uiState.totalQuestions,
+            )
+            uiState.isAnswerCorrect?.let { isCorrect ->
+                AnswerFeedbackBanner(
+                    isCorrect = isCorrect,
+                )
+            }
+        }
     }
 }
 
