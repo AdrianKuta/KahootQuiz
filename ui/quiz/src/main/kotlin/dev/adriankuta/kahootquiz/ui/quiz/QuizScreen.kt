@@ -84,7 +84,9 @@ private fun QuizScreen(
 private fun QuizScreenLoading(
     modifier: Modifier = Modifier,
 ) {
-    CircularProgressIndicator()
+    CircularProgressIndicator(
+        modifier = modifier,
+    )
 }
 
 @Composable

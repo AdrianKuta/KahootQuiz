@@ -42,7 +42,8 @@ class QuizScreenViewModel @Inject constructor(
                 if (quizState is QuizUiState.Success) {
                     // Start only if timer hasn't been started yet and we are on the first question
                     if (timerJob == null && _currentQuestionIndex.value == 0) {
-                        val firstQuestionTime = quizState.quiz.questions.getOrNull(0)?.time?.inWholeSeconds?.toInt()
+                        val firstQuestionTime =
+                            quizState.quiz.questions.getOrNull(0)?.time?.inWholeSeconds?.toInt()
                         startCountdown(firstQuestionTime)
                     }
                 }
@@ -69,7 +70,7 @@ class QuizScreenViewModel @Inject constructor(
                     timerState = TimerState(
                         remainingTimeSeconds = remainingTimeSeconds,
                         totalTimeSeconds = currentQuestion?.time?.inWholeSeconds?.toInt() ?: 0,
-                    )
+                    ),
                 )
             }
         }
@@ -96,7 +97,8 @@ class QuizScreenViewModel @Inject constructor(
             if (nextIndex < total) {
                 _selectedChoiceIndex.value = null
                 _currentQuestionIndex.value = nextIndex
-                val nextQuestionTime = quizState.quiz.questions[nextIndex].time?.inWholeSeconds?.toInt()
+                val nextQuestionTime =
+                    quizState.quiz.questions[nextIndex].time?.inWholeSeconds?.toInt()
                 startCountdown(nextQuestionTime)
             } else {
                 // Last question reached: stop timer and keep state (could navigate to results in the future)
