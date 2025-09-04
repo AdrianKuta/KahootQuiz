@@ -1,5 +1,8 @@
 package dev.adriankuta.kahootquiz.ui.quiz
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -43,6 +47,7 @@ import dev.adriankuta.kahootquiz.core.designsystem.Green2
 import dev.adriankuta.kahootquiz.core.designsystem.Grey
 import dev.adriankuta.kahootquiz.core.designsystem.KahootQuizTheme
 import dev.adriankuta.kahootquiz.core.designsystem.Pink
+import dev.adriankuta.kahootquiz.core.designsystem.Purple
 import dev.adriankuta.kahootquiz.core.designsystem.Red
 import dev.adriankuta.kahootquiz.core.designsystem.Red2
 import dev.adriankuta.kahootquiz.core.designsystem.Yellow3
@@ -90,6 +95,8 @@ private fun QuizScreen(
                     .fillMaxWidth()
                     .height(72.dp)
                     .padding(8.dp),
+                currentQuestionIndex = uiState.currentQuestionIndex,
+                totalQuestions = uiState.totalQuestions,
             )
             QuestionContent(
                 question = uiState.currentQuestion ?: return,
@@ -101,6 +108,12 @@ private fun QuizScreen(
                 answer = uiState.answer,
                 onSelect = onSelect,
             )
+            // Timer below choices
+            TimerBar(
+                totalSeconds = uiState.totalTimeSeconds,
+                remainingSeconds = uiState.remainingTimeSeconds,
+                modifier = Modifier.padding(8.dp),
+            )
         }
     }
 }
@@ -108,17 +121,19 @@ private fun QuizScreen(
 @Composable
 private fun Toolbar(
     modifier: Modifier = Modifier,
+    currentQuestionIndex: Int = 0,
+    totalQuestions: Int = 0,
 ) {
     Box(
         modifier = modifier,
     ) {
         Text(
-            text = "2/24",
+            text = "${currentQuestionIndex + 1}/$totalQuestions",
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .background(
                     color = Grey,
-                    shape = RoundedCornerShape(60.dp),
+                    shape = RoundedCornerShape(percent = 50),
                 )
                 .padding(horizontal = 8.dp, vertical = 4.dp),
         )
@@ -128,7 +143,7 @@ private fun Toolbar(
                 .align(Alignment.Center)
                 .background(
                     color = Grey,
-                    shape = RoundedCornerShape(60.dp),
+                    shape = RoundedCornerShape(percent = 50),
                 )
                 .padding(horizontal = 8.dp, vertical = 4.dp),
         ) {
@@ -319,6 +334,37 @@ private fun ChoiceItemRevealed(
     }
 }
 
+@Composable
+private fun TimerBar(
+    totalSeconds: Int,
+    remainingSeconds: Int,
+    modifier: Modifier = Modifier,
+) {
+
+    val progress: Float by animateFloatAsState(
+        targetValue = (remainingSeconds.toFloat()) / totalSeconds,
+        label = "Timer",
+        animationSpec = tween(durationMillis = 1000, easing = LinearEasing),
+    )
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth(progress)
+            .background(
+                color = Purple,
+                shape = RoundedCornerShape(percent = 50),
+            ),
+    ) {
+        Text(
+            text = "$remainingSeconds",
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 8.dp)
+                .clipToBounds(),
+            color = Color.White,
+        )
+    }
+}
 
 @Preview
 @Composable
@@ -342,6 +388,9 @@ private fun QuizScreenPreview() {
         QuizScreen(
             uiState = QuizUiState(
                 currentQuestion = sampleQuestion,
+                totalQuestions = 12,
+                totalTimeSeconds = 30,
+                remainingTimeSeconds = 10,
             ),
             onSelect = {},
         )
@@ -373,6 +422,9 @@ private fun QuizScreenRevealedAnswerPreview() {
                 answer = AnswerUiState(
                     selectedChoiceIndex = 1,
                 ),
+                totalQuestions = 12,
+                totalTimeSeconds = 30,
+                remainingTimeSeconds = 10,
             ),
             onSelect = {},
         )
