@@ -129,7 +129,7 @@ private fun QuizScreen(
                 }
 
                 // Timer below choices
-                if (uiState.selectedChoiceIndex == null) {
+                if (uiState.selectedChoiceIndex == null && uiState.timerState.totalTimeSeconds > 0) {
                     item {
                         TimerBar(
                             totalSeconds = uiState.timerState.totalTimeSeconds,

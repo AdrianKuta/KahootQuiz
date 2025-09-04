@@ -12,10 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,7 +31,7 @@ class QuizScreenViewModel @Inject constructor(
             initialValue = QuizUiState.Loading,
         )
     private val _selectedChoiceIndex = MutableStateFlow<Int?>(null)
-    private val _remainingTimeSeconds = MutableStateFlow(-1)
+    private val _remainingTimeSeconds = MutableStateFlow(0)
     private val _currentQuestionIndex = MutableStateFlow(0)
     private var timerJob: Job? = null
 
@@ -44,7 +41,7 @@ class QuizScreenViewModel @Inject constructor(
             quiz.collect { quizState ->
                 if (quizState is QuizUiState.Success) {
                     // Start only if timer hasn't been started yet and we are on the first question
-                    if (_remainingTimeSeconds.value == -1 && _currentQuestionIndex.value == 0) {
+                    if (timerJob == null && _currentQuestionIndex.value == 0) {
                         val firstQuestionTime = quizState.quiz.questions.getOrNull(0)?.time?.inWholeSeconds?.toInt()
                         startCountdown(firstQuestionTime)
                     }
@@ -86,6 +83,7 @@ class QuizScreenViewModel @Inject constructor(
 
     fun onChoiceSelected(index: Int) {
         timerJob?.cancel()
+        timerJob = null
         _selectedChoiceIndex.value = index
     }
 
@@ -103,13 +101,19 @@ class QuizScreenViewModel @Inject constructor(
             } else {
                 // Last question reached: stop timer and keep state (could navigate to results in the future)
                 timerJob?.cancel()
+                timerJob = null
+                _remainingTimeSeconds.value = 0
             }
         }
     }
 
     private fun startCountdown(totalSeconds: Int?) {
         timerJob?.cancel()
-        if (totalSeconds == null || totalSeconds <= 0) return
+        if (totalSeconds == null || totalSeconds <= 0) {
+            _remainingTimeSeconds.value = 0
+            timerJob = null
+            return
+        }
         _remainingTimeSeconds.value = totalSeconds
         timerJob = viewModelScope.launch {
             var remaining = totalSeconds
@@ -122,6 +126,7 @@ class QuizScreenViewModel @Inject constructor(
             if (_selectedChoiceIndex.value == null) {
                 _selectedChoiceIndex.value = -1
             }
+            timerJob = null
         }
     }
 }
