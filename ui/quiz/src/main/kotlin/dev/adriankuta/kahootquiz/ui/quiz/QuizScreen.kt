@@ -1,5 +1,6 @@
 package dev.adriankuta.kahootquiz.ui.quiz
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -9,7 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,17 +21,17 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -71,14 +72,16 @@ fun QuizScreen(
     QuizScreen(
         uiState = uiState,
         onSelect = viewModel::onChoiceSelected,
+        onContinue = viewModel::onContinue,
         modifier = modifier.fillMaxSize(),
     )
 }
 
 @Composable
 private fun QuizScreen(
-    uiState: QuizUiState,
+    uiState: ScreenUiState,
     onSelect: (Int) -> Unit,
+    onContinue: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier.fillMaxSize()) {
@@ -88,50 +91,75 @@ private fun QuizScreen(
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
         )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            Toolbar(
+        when (uiState) {
+            ScreenUiState.Loading -> CircularProgressIndicator()
+            is ScreenUiState.Success -> LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(72.dp)
-                    .padding(8.dp),
-                currentQuestionIndex = uiState.currentQuestionIndex,
-                totalQuestions = uiState.totalQuestions,
-            )
-            QuestionContent(
-                question = uiState.currentQuestion ?: return,
-                modifier = Modifier.padding(horizontal = 8.dp),
-            )
-            Spacer(Modifier.height(8.dp))
-            Choices(
-                choices = uiState.currentQuestion.choices ?: emptyList(), // TODO remove empty list
-                answer = uiState.answer,
-                onSelect = onSelect,
-            )
-            // Timer below choices
-            if (uiState.answer == null) {
-                TimerBar(
-                    totalSeconds = uiState.totalTimeSeconds,
-                    remainingSeconds = uiState.remainingTimeSeconds,
-                    modifier = Modifier.padding(8.dp),
-                )
-            } else {
-                FilledTonalButton(
-                    onClick = {},
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    colors = ButtonDefaults.filledTonalButtonColors().copy(
-                        containerColor = Grey,
-                        contentColor = Color.Black
-                    ),
-                    shape = RoundedCornerShape(4.dp),
-                ) {
-                    Text(
-                        text = stringResource(R.string.continue_text),
+                    .animateContentSize(),
+            ) {
+                item {
+                    Toolbar(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(72.dp)
+                            .padding(8.dp),
+                        currentQuestionIndex = uiState.currentQuestionIndex,
+                        totalQuestions = uiState.totalQuestions,
                     )
                 }
+                item {
+                    QuestionContent(
+                        question = uiState.currentQuestion ?: return@item,
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .animateItem(),
+                    )
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                item {
+                    Choices(
+                        choices = uiState.currentQuestion?.choices
+                            ?: emptyList(), // TODO remove empty list
+                        selectedChoiceIndex = uiState.selectedChoiceIndex,
+                        onSelect = onSelect,
+                        modifier = Modifier.padding(8.dp),
+                    )
+                }
+
+                // Timer below choices
+                if (uiState.selectedChoiceIndex == null) {
+                    item {
+                        TimerBar(
+                            totalSeconds = uiState.timerState.totalTimeSeconds,
+                            remainingSeconds = uiState.timerState.remainingTimeSeconds,
+                            modifier = Modifier.padding(8.dp),
+                        )
+                    }
+                } else {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            FilledTonalButton(
+                                onClick = onContinue,
+                                colors = ButtonDefaults.filledTonalButtonColors().copy(
+                                    containerColor = Grey,
+                                    contentColor = Color.Black,
+                                ),
+                                shape = RoundedCornerShape(4.dp),
+                                modifier = Modifier.align(Alignment.Center),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.continue_text),
+                                )
+                            }
+                        }
+                    }
+                }
             }
+
         }
     }
 }
@@ -192,7 +220,8 @@ private fun QuestionContent(
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 200.dp),
+                .heightIn(min = 200.dp)
+                .clip(shape = RoundedCornerShape(4.dp)),
         )
         Spacer(Modifier.height(16.dp))
         Text(
@@ -216,22 +245,22 @@ private fun QuestionContent(
 private fun Choices(
     choices: List<Choice>,
     onSelect: (Int) -> Unit,
-    answer: AnswerUiState?,
+    selectedChoiceIndex: Int?,
     modifier: Modifier = Modifier,
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(8.dp),
+    FlowRow(
+        maxItemsInEachRow = 2,
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier,
     ) {
-        itemsIndexed(choices) { index, choice ->
+        choices.forEachIndexed { index, choice ->
             ChoiceItem(
                 choice = choice,
                 index = index,
-                answer = answer,
+                selectedChoiceIndex = selectedChoiceIndex,
                 onClick = { onSelect(index) },
+                modifier = Modifier.weight(1f),
             )
         }
     }
@@ -242,19 +271,22 @@ private fun ChoiceItem(
     choice: Choice,
     onClick: () -> Unit,
     index: Int,
-    answer: AnswerUiState?,
+    selectedChoiceIndex: Int?,
+    modifier: Modifier = Modifier,
 ) {
-    if (answer != null) {
+    if (selectedChoiceIndex != null) {
         ChoiceItemRevealed(
             choice = choice,
             index = index,
-            isSelected = answer.selectedChoiceIndex == index,
+            isSelected = selectedChoiceIndex == index,
+            modifier = modifier,
         )
     } else {
         ChoiceItemDefault(
             choice = choice,
             index = index,
             onClick = onClick,
+            modifier = modifier,
         )
     }
 }
@@ -264,6 +296,7 @@ private fun ChoiceItemDefault(
     choice: Choice,
     index: Int,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val backgroundColor = when (index) {
         0 -> Red2
@@ -281,7 +314,7 @@ private fun ChoiceItemDefault(
         else -> DesignR.drawable.ic_square
     }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(backgroundColor, shape = RoundedCornerShape(4.dp))
             .height(100.dp)
             .clickable(
@@ -309,6 +342,7 @@ private fun ChoiceItemRevealed(
     choice: Choice,
     index: Int,
     isSelected: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val backgroundColor = when {
         isSelected && !choice.correct -> Red
@@ -329,7 +363,7 @@ private fun ChoiceItemRevealed(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(backgroundColor, shape = RoundedCornerShape(4.dp))
             .height(100.dp),
     ) {
@@ -404,13 +438,13 @@ private fun QuizScreenPreview() {
             imageMetadata = null,
         )
         QuizScreen(
-            uiState = QuizUiState(
+            uiState = ScreenUiState.Success(
                 currentQuestion = sampleQuestion,
+                selectedChoiceIndex = null,
                 totalQuestions = 12,
-                totalTimeSeconds = 30,
-                remainingTimeSeconds = 10,
             ),
             onSelect = {},
+            onContinue = {},
         )
     }
 }
@@ -435,16 +469,13 @@ private fun QuizScreenRevealedAnswerPreview() {
             imageMetadata = null,
         )
         QuizScreen(
-            uiState = QuizUiState(
+            uiState = ScreenUiState.Success(
                 currentQuestion = sampleQuestion,
-                answer = AnswerUiState(
-                    selectedChoiceIndex = 1,
-                ),
+                selectedChoiceIndex = 1,
                 totalQuestions = 12,
-                totalTimeSeconds = 30,
-                remainingTimeSeconds = 10,
             ),
             onSelect = {},
+            onContinue = {},
         )
     }
 }
