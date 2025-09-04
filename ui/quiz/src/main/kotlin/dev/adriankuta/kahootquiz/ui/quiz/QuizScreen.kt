@@ -24,6 +24,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -109,11 +111,27 @@ private fun QuizScreen(
                 onSelect = onSelect,
             )
             // Timer below choices
-            TimerBar(
-                totalSeconds = uiState.totalTimeSeconds,
-                remainingSeconds = uiState.remainingTimeSeconds,
-                modifier = Modifier.padding(8.dp),
-            )
+            if (uiState.answer == null) {
+                TimerBar(
+                    totalSeconds = uiState.totalTimeSeconds,
+                    remainingSeconds = uiState.remainingTimeSeconds,
+                    modifier = Modifier.padding(8.dp),
+                )
+            } else {
+                FilledTonalButton(
+                    onClick = {},
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    colors = ButtonDefaults.filledTonalButtonColors().copy(
+                        containerColor = Grey,
+                        contentColor = Color.Black
+                    ),
+                    shape = RoundedCornerShape(4.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.continue_text),
+                    )
+                }
+            }
         }
     }
 }
