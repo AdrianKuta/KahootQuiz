@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalLayoutApi::class)
+
 package dev.adriankuta.kahootquiz.ui.quiz.components
 
 import androidx.compose.foundation.Image
@@ -5,8 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,21 +39,22 @@ fun Choices(
     selectedChoiceIndex: Int?,
     modifier: Modifier = Modifier,
 ) {
-    FlowRow(
-        maxItemsInEachRow = 2,
+    EvenGrid(
+        items = choices,
+        columns = 2,
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        choices.forEachIndexed { index, choice ->
-            ChoiceItem(
-                choice = choice,
-                index = index,
-                selectedChoiceIndex = selectedChoiceIndex,
-                onClick = { onSelect(index) },
-                modifier = Modifier.weight(1f),
-            )
-        }
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) { choice, index ->
+        ChoiceItem(
+            choice = choice,
+            index = index,
+            selectedChoiceIndex = selectedChoiceIndex,
+            onClick = { onSelect(index) },
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+        )
     }
 }
 
@@ -104,7 +107,6 @@ private fun ChoiceItemDefault(
     Box(
         modifier = modifier
             .background(backgroundColor, shape = RoundedCornerShape(4.dp))
-            .height(100.dp)
             .clickable(
                 onClick = onClick,
             ),
@@ -152,8 +154,7 @@ private fun ChoiceItemRevealed(
 
     Box(
         modifier = modifier
-            .background(backgroundColor, shape = RoundedCornerShape(4.dp))
-            .height(100.dp),
+            .background(backgroundColor, shape = RoundedCornerShape(4.dp)),
     ) {
         Image(
             painter = painterResource(icon),

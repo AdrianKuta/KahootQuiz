@@ -141,9 +141,9 @@ private fun screenUiState(
     when (quizState) {
         QuizUiState.Loading -> ScreenUiState.Loading
         is QuizUiState.Success -> {
-            val currentQuestion = quizState.quiz.questions.getOrNull(currentQuestionIndex)
+            val currentQuestion = quizState.quiz.questions[currentQuestionIndex]
             val isAnswerCorrect = selectedChoiceIndex?.let { idx ->
-                currentQuestion?.choices?.getOrNull(idx)?.correct == true
+                currentQuestion.choices?.getOrNull(idx)?.correct == true
             }
 
             ScreenUiState.Success(
@@ -153,7 +153,7 @@ private fun screenUiState(
                 totalQuestions = quizState.quiz.questions.size,
                 timerState = TimerState(
                     remainingTimeSeconds = remainingTimeSeconds,
-                    totalTimeSeconds = currentQuestion?.time?.inWholeSeconds?.toInt() ?: 0,
+                    totalTimeSeconds = currentQuestion.time?.inWholeSeconds?.toInt() ?: 0,
                 ),
                 isAnswerCorrect = isAnswerCorrect,
             )
@@ -171,7 +171,7 @@ sealed interface QuizUiState {
 sealed interface ScreenUiState {
     data object Loading : ScreenUiState
     data class Success(
-        val currentQuestion: Question? = null,
+        val currentQuestion: Question,
         val selectedChoiceIndex: Int? = null,
         val currentQuestionIndex: Int = 0,
         val totalQuestions: Int = 0,

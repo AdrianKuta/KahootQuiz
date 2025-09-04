@@ -1,13 +1,13 @@
 package dev.adriankuta.kahootquiz.ui.quiz
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -85,28 +85,10 @@ private fun QuizScreenSuccess(
     onContinue: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
+    Column(
         modifier = modifier
-            .fillMaxWidth()
-            .animateContentSize(),
+            .fillMaxWidth(),
     ) {
-        toolbar(uiState)
-        questionContent(uiState)
-        choices(uiState, onSelect)
-        // Timer below choices
-        if (uiState.selectedChoiceIndex == null && uiState.timerState.totalTimeSeconds > 0) {
-            timer(uiState)
-        } else {
-            continueButton(uiState, onContinue)
-        }
-    }
-}
-
-private fun LazyListScope.toolbar(
-    uiState: ScreenUiState.Success,
-    modifier: Modifier = Modifier,
-) {
-    item(key = "toolbar") {
         Box(
             modifier = modifier
                 .height(72.dp),
@@ -124,24 +106,55 @@ private fun LazyListScope.toolbar(
                 )
             }
         }
-    }
-}
 
-private fun LazyListScope.questionContent(
-    uiState: ScreenUiState.Success,
-) {
-    if (uiState.currentQuestion != null) {
-        item(key = "question_${uiState.currentQuestionIndex}") {
-            QuestionContent(
-                question = uiState.currentQuestion,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .animateItem(),
+        QuestionContent(
+            question = uiState.currentQuestion,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxHeight(0.5f),
+        )
+        Spacer(Modifier.height(8.dp))
+
+
+        Choices(
+            choices = uiState.currentQuestion.choices,
+            selectedChoiceIndex = uiState.selectedChoiceIndex,
+            onSelect = onSelect,
+            modifier = Modifier
+                .padding(8.dp)
+                .weight(1f),
+        )
+
+        // Timer below choices
+        if (uiState.selectedChoiceIndex == null && uiState.timerState.totalTimeSeconds > 0) {
+            TimerBar(
+                totalSeconds = uiState.timerState.totalTimeSeconds,
+                remainingSeconds = uiState.timerState.remainingTimeSeconds,
+                modifier = Modifier.padding(8.dp),
             )
-            Spacer(Modifier.height(8.dp))
+        } else {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                FilledTonalButton(
+                    onClick = onContinue,
+                    colors = ButtonDefaults.filledTonalButtonColors().copy(
+                        containerColor = Grey,
+                        contentColor = Color.Black,
+                    ),
+                    shape = RoundedCornerShape(4.dp),
+                    modifier = Modifier.align(Alignment.Center),
+                ) {
+                    Text(
+                        text = stringResource(R.string.continue_text),
+                    )
+                }
+            }
+
         }
     }
 }
+
 
 private fun LazyListScope.timer(uiState: ScreenUiState.Success) {
     item(key = "timer_${uiState.currentQuestionIndex}") {
@@ -150,49 +163,6 @@ private fun LazyListScope.timer(uiState: ScreenUiState.Success) {
             remainingSeconds = uiState.timerState.remainingTimeSeconds,
             modifier = Modifier.padding(8.dp),
         )
-    }
-}
-
-private fun LazyListScope.continueButton(
-    uiState: ScreenUiState.Success,
-    onContinue: () -> Unit,
-) {
-    item(key = "continue_${uiState.currentQuestionIndex}") {
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            FilledTonalButton(
-                onClick = onContinue,
-                colors = ButtonDefaults.filledTonalButtonColors().copy(
-                    containerColor = Grey,
-                    contentColor = Color.Black,
-                ),
-                shape = RoundedCornerShape(4.dp),
-                modifier = Modifier.align(Alignment.Center),
-            ) {
-                Text(
-                    text = stringResource(R.string.continue_text),
-                )
-            }
-        }
-    }
-}
-
-private fun LazyListScope.choices(
-    uiState: ScreenUiState.Success,
-    onSelect: (Int) -> Unit,
-) {
-    uiState.currentQuestion?.choices?.let { choicesList ->
-        if (choicesList.isNotEmpty()) {
-            item(key = "choices_${uiState.currentQuestionIndex}") {
-                Choices(
-                    choices = choicesList,
-                    selectedChoiceIndex = uiState.selectedChoiceIndex,
-                    onSelect = onSelect,
-                    modifier = Modifier.padding(8.dp),
-                )
-            }
-        }
     }
 }
 

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -34,8 +33,7 @@ fun QuestionContent(
             contentDescription = question.imageMetadata?.altText,
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 200.dp)
+                .weight(1f)
                 .clip(shape = RoundedCornerShape(4.dp)),
         )
         Spacer(Modifier.height(16.dp))

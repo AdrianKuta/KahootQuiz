@@ -33,7 +33,7 @@ fun TimerBar(
 
     Box(
         modifier = modifier
-            .fillMaxWidth(progress.coerceIn(0f, 1f))
+            .fillMaxWidth(progress)
             .background(
                 color = Purple,
                 shape = RoundedCornerShape(percent = 50),

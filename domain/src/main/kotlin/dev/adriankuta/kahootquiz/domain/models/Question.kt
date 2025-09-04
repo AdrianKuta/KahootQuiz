@@ -10,7 +10,7 @@ data class Question(
     val time: Duration?,
     val points: Boolean? = null,
     val pointsMultiplier: Int?,
-    val choices: List<Choice>?,
+    val choices: List<Choice>,
     val layout: String? = null,
     val image: String? = null,
     val imageMetadata: ImageMetadata?,
