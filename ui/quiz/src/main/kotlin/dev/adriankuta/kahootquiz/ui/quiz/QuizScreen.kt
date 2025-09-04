@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -92,74 +93,128 @@ private fun QuizScreen(
             modifier = Modifier.fillMaxSize(),
         )
         when (uiState) {
-            ScreenUiState.Loading -> CircularProgressIndicator()
-            is ScreenUiState.Success -> LazyColumn(
+            ScreenUiState.Loading -> QuizScreenLoading()
+            is ScreenUiState.Success -> QuizScreenSuccess(
+                uiState = uiState,
+                onSelect = onSelect,
+                onContinue = onContinue,
+            )
+
+        }
+    }
+}
+
+@Composable
+private fun QuizScreenLoading(
+    modifier: Modifier = Modifier,
+) {
+    CircularProgressIndicator()
+}
+
+@Composable
+private fun QuizScreenSuccess(
+    uiState: ScreenUiState.Success,
+    onSelect: (Int) -> Unit,
+    onContinue: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+    ) {
+        toolbar(uiState)
+        questionContent(uiState)
+        choices(uiState, onSelect)
+        // Timer below choices
+        if (uiState.selectedChoiceIndex == null && uiState.timerState.totalTimeSeconds > 0) {
+            timer(uiState)
+        } else {
+            continueButton(uiState, onContinue)
+        }
+    }
+}
+
+private fun LazyListScope.toolbar(
+    uiState: ScreenUiState.Success,
+) {
+    item(key = "toolbar") {
+        Toolbar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp)
+                .padding(8.dp),
+            currentQuestionIndex = uiState.currentQuestionIndex,
+            totalQuestions = uiState.totalQuestions,
+        )
+    }
+}
+
+private fun LazyListScope.questionContent(
+    uiState: ScreenUiState.Success,
+) {
+    if (uiState.currentQuestion != null) {
+        item(key = "question_${uiState.currentQuestionIndex}") {
+            QuestionContent(
+                question = uiState.currentQuestion,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize(),
+                    .padding(horizontal = 8.dp)
+                    .animateItem(),
+            )
+            Spacer(Modifier.height(8.dp))
+        }
+    }
+}
+
+private fun LazyListScope.timer(uiState: ScreenUiState.Success) {
+    item(key = "timer_${uiState.currentQuestionIndex}") {
+        TimerBar(
+            totalSeconds = uiState.timerState.totalTimeSeconds,
+            remainingSeconds = uiState.timerState.remainingTimeSeconds,
+            modifier = Modifier.padding(8.dp),
+        )
+    }
+}
+
+private fun LazyListScope.continueButton(
+    uiState: ScreenUiState.Success,
+    onContinue: () -> Unit,
+) {
+    item(key = "continue_${uiState.currentQuestionIndex}") {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            FilledTonalButton(
+                onClick = onContinue,
+                colors = ButtonDefaults.filledTonalButtonColors().copy(
+                    containerColor = Grey,
+                    contentColor = Color.Black,
+                ),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier.align(Alignment.Center),
             ) {
-                item {
-                    Toolbar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(72.dp)
-                            .padding(8.dp),
-                        currentQuestionIndex = uiState.currentQuestionIndex,
-                        totalQuestions = uiState.totalQuestions,
-                    )
-                }
-                item {
-                    QuestionContent(
-                        question = uiState.currentQuestion ?: return@item,
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .animateItem(),
-                    )
-                    Spacer(Modifier.height(8.dp))
-                }
-
-                item {
-                    Choices(
-                        choices = uiState.currentQuestion?.choices
-                            ?: emptyList(), // TODO remove empty list
-                        selectedChoiceIndex = uiState.selectedChoiceIndex,
-                        onSelect = onSelect,
-                        modifier = Modifier.padding(8.dp),
-                    )
-                }
-
-                // Timer below choices
-                if (uiState.selectedChoiceIndex == null && uiState.timerState.totalTimeSeconds > 0) {
-                    item {
-                        TimerBar(
-                            totalSeconds = uiState.timerState.totalTimeSeconds,
-                            remainingSeconds = uiState.timerState.remainingTimeSeconds,
-                            modifier = Modifier.padding(8.dp),
-                        )
-                    }
-                } else {
-                    item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            FilledTonalButton(
-                                onClick = onContinue,
-                                colors = ButtonDefaults.filledTonalButtonColors().copy(
-                                    containerColor = Grey,
-                                    contentColor = Color.Black,
-                                ),
-                                shape = RoundedCornerShape(4.dp),
-                                modifier = Modifier.align(Alignment.Center),
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.continue_text),
-                                )
-                            }
-                        }
-                    }
-                }
+                Text(
+                    text = stringResource(R.string.continue_text),
+                )
             }
+        }
+    }
+}
 
+private fun LazyListScope.choices(
+    uiState: ScreenUiState.Success,
+    onSelect: (Int) -> Unit,
+) {
+    uiState.currentQuestion?.choices?.let { choicesList ->
+        if (choicesList.isNotEmpty()) {
+            item(key = "choices_${uiState.currentQuestionIndex}") {
+                Choices(
+                    choices = choicesList,
+                    selectedChoiceIndex = uiState.selectedChoiceIndex,
+                    onSelect = onSelect,
+                    modifier = Modifier.padding(8.dp),
+                )
+            }
         }
     }
 }
@@ -195,7 +250,7 @@ private fun Toolbar(
         ) {
             Image(
                 painter = painterResource(id = DesignR.drawable.ic_type),
-                contentDescription = "",
+                contentDescription = null,
                 modifier = Modifier.size(24.dp),
             )
             Spacer(Modifier.width(4.dp))
@@ -224,11 +279,14 @@ private fun QuestionContent(
                 .clip(shape = RoundedCornerShape(4.dp)),
         )
         Spacer(Modifier.height(16.dp))
-        Text(
-            text = HtmlCompat.fromHtml(
+        val questionText = androidx.compose.runtime.remember(question.question) {
+            HtmlCompat.fromHtml(
                 question.question ?: "",
                 HtmlCompat.FROM_HTML_MODE_COMPACT,
-            ).toAnnotatedString(),
+            ).toAnnotatedString()
+        }
+        Text(
+            text = questionText,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
@@ -393,15 +451,17 @@ private fun TimerBar(
     modifier: Modifier = Modifier,
 ) {
 
+    val target =
+        if (totalSeconds <= 0) 0f else (remainingSeconds.toFloat() / totalSeconds).coerceIn(0f, 1f)
     val progress: Float by animateFloatAsState(
-        targetValue = (remainingSeconds.toFloat()) / totalSeconds,
+        targetValue = target,
         label = "Timer",
         animationSpec = tween(durationMillis = 1000, easing = LinearEasing),
     )
 
     Box(
         modifier = modifier
-            .fillMaxWidth(progress)
+            .fillMaxWidth(progress.coerceIn(0f, 1f))
             .background(
                 color = Purple,
                 shape = RoundedCornerShape(percent = 50),
