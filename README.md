@@ -82,13 +82,6 @@ If you prefer the command line: `./gradlew assembleDebug` and then install the g
     - Consider support for additional media types (video/audio), with graceful fallbacks.
 5. Transitions between questions could be more smooth.
 
-## What I’m Happy About
-
-- I created and used convention plugins to reuse modules configuration.
-- The architecture is clean with multi-modularity and separation of concerns.
-- I leaned into Kotlin ‘sugar’ where it helps readability and conciseness — I love it.
-- Configured `Detekt` for static code analysis
-
 ## Extra: Related Work I Can Share
 
 I can share more complex code from my private app that is published on the Google Play Store.
