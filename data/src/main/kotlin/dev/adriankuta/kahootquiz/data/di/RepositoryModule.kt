@@ -1,11 +1,11 @@
-package dev.adriankuta.kahootquiz.model.data.di
+package dev.adriankuta.kahootquiz.data.di
 
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dev.adriankuta.kahootquiz.data.QuizRepositoryImpl
 import dev.adriankuta.kahootquiz.domain.repositories.QuizRepository
-import dev.adriankuta.kahootquiz.model.data.QuizRepositoryImpl
 import javax.inject.Singleton
 
 @Module

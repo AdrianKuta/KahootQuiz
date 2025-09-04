@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.adriankuta.kahootquiz.model.data"
+    namespace = "dev.adriankuta.kahootquiz.data"
 }
 
 dependencies {

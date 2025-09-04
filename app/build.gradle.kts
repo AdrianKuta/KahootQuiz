@@ -29,7 +29,7 @@ android {
 dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.domain)
-    implementation(projects.model.data)
+    implementation(projects.data)
     implementation(projects.ui.quiz)
 
     implementation(libs.androidx.activity.compose)
