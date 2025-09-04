@@ -1,7 +1,6 @@
 package dev.adriankuta.kahootquiz.ui.quiz
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,8 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,20 +28,18 @@ import dev.adriankuta.kahootquiz.core.designsystem.Grey
 import dev.adriankuta.kahootquiz.core.designsystem.KahootQuizTheme
 import dev.adriankuta.kahootquiz.domain.models.Choice
 import dev.adriankuta.kahootquiz.domain.models.Question
-import dev.adriankuta.kahootquiz.ui.quiz.components.Choices
 import dev.adriankuta.kahootquiz.ui.quiz.components.AnswerFeedbackBanner
+import dev.adriankuta.kahootquiz.ui.quiz.components.Choices
 import dev.adriankuta.kahootquiz.ui.quiz.components.QuestionContent
 import dev.adriankuta.kahootquiz.ui.quiz.components.TimerBar
 import dev.adriankuta.kahootquiz.ui.quiz.components.Toolbar
 import kotlin.time.Duration.Companion.seconds
-import dev.adriankuta.kahootquiz.core.designsystem.R as DesignR
 
 @Composable
 fun QuizScreen(
     modifier: Modifier = Modifier,
     viewModel: QuizScreenViewModel = hiltViewModel(),
 ) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     QuizScreen(
@@ -63,12 +58,6 @@ private fun QuizScreen(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = DesignR.drawable.bg_image),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-        )
         when (uiState) {
             ScreenUiState.Loading -> QuizScreenLoading()
             is ScreenUiState.Success -> QuizScreenSuccess(
@@ -76,7 +65,6 @@ private fun QuizScreen(
                 onSelect = onSelect,
                 onContinue = onContinue,
             )
-
         }
     }
 }

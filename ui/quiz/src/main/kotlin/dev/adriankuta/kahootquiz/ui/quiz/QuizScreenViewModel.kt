@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class QuizScreenViewModel @Inject constructor(
@@ -78,7 +79,6 @@ class QuizScreenViewModel @Inject constructor(
                 )
             }
         }
-
     }
         .stateIn(
             scope = viewModelScope,
@@ -124,7 +124,7 @@ class QuizScreenViewModel @Inject constructor(
         timerJob = viewModelScope.launch {
             var remaining = totalSeconds
             while (remaining > 0) {
-                delay(1000)
+                delay(1.seconds)
                 remaining -= 1
                 _remainingTimeSeconds.value = remaining
             }

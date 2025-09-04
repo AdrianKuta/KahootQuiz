@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package dev.adriankuta.kahootquiz.ui.quiz.navigation
 
 import androidx.navigation.NavGraphBuilder

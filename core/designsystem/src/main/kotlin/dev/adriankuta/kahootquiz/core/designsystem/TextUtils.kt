@@ -28,7 +28,8 @@ fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString {
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
                     ),
-                    start, end,
+                    start,
+                    end,
                 )
             }
 

@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package dev.adriankuta.kahootquiz.model.data.mappers
 
 import dev.adriankuta.kahootquiz.core.network.models.AccessDto
